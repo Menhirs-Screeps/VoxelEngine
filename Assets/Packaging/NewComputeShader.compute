@@ -1,0 +1,15 @@
+﻿#pragma kernel Multiply
+
+struct VecMatPair
+{
+	float3 pos;
+};
+
+RWStructuredBuffer<VecMatPair> inputBuffer;
+RWStructuredBuffer<VecMatPair> outputBuffer;
+
+[numthreads(16,1,1)]
+void Multiply (uint3 id : SV_DispatchThreadID)
+{
+    outputBuffer[id.x].pos = inputBuffer[id.x].pos + float3(0.0,1.0,0.0);
+}
