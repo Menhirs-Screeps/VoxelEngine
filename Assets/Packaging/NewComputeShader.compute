@@ -11,5 +11,5 @@ RWStructuredBuffer<VecMatPair> outputBuffer;
 [numthreads(16,1,1)]
 void Multiply (uint3 id : SV_DispatchThreadID)
 {
-    outputBuffer[id.x].pos = inputBuffer[id.x].pos + float3(0.0,1.0,0.0);
+    outputBuffer[id.y].pos = inputBuffer[id.y].pos + float3(0.0,id.y/11.0,0.0);
 }

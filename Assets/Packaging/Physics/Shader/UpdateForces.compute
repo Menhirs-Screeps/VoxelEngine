@@ -1,0 +1,58 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+const uint Cube		0x01;
+const uint Sphere	0x02;
+const uint Cone		0x03;
+const uint Cylinder	0x04;
+
+struct Particle
+{
+	float inverseMass;
+	float size;
+	float3 forceAccumulator;
+	float3 acceleration;
+	float3 velocity;
+	float3 position;
+};
+
+struct Force
+{
+	uint shape;
+	float4x4 world2local;
+	float magnitude;
+	float parameter1;
+};
+
+RWStructuredBuffer<Particle> particles;
+StructuredBuffer<Force> forces;
+
+bool affectedCube(Particle p, Force f) {
+	float4 pos = mul ( float4 ( p.position, 1 ), f.world2local );
+	if (abs(pos.x) > 0.5 ) return false;
+	if (abs(pos.y) > 0.5 ) return false;
+	if (abs(pos.z) > 0.5 ) return false;
+	return true;
+}
+
+bool affectedSphere(Particle p, Force f) {
+	float4 pos = mul ( float4 ( p.position, 1 ), f.world2local );
+	if ((pos.x*pos.x+pos.y*pos.y) > (0.5*0.5)) return false;
+	return true;
+}
+
+bool affected(Particle p, Force f) {
+	if ( f.shape == Cube ) return AffectedCube (p,f);
+	if ( f.shape == Sphere ) return AffectedSphere (p,f);
+	//if ( f.shape == Cube ) return AffectedCone (p,f);
+	//if ( f.shape == Cube ) return AffectedCylinder (p,f);
+	return false;
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	if ( affected(particles[id.x],forces[id.y])) {
+		particles[id.x].forceAccumulator.x += 0.1;
+	}
+}

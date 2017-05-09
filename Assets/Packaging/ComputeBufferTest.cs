@@ -29,9 +29,10 @@ public class ComputeBufferTest : MonoBehaviour {
 		int kernel = shader.FindKernel("Multiply");
 		shader.SetBuffer(kernel, "inputBuffer", input);
 		shader.SetBuffer(kernel, "outputBuffer", output);
-		shader.Dispatch(kernel, theVertices.Length, 1,1);
+		shader.Dispatch(kernel, theVertices.Length, theVertices.Length, 1);
 		output.GetData(outputdata);
 		for (int i = 0; i < theVertices.Length; i++) {
+            Debug.Log(theVertices[i] + " " + outputdata[i].point.ToString("F5"));
 			theVerticesOut [i] = outputdata [i].point;
 		}
 		theMesh.vertices = theVerticesOut;

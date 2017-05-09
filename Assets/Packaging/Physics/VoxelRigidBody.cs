@@ -122,8 +122,8 @@ public class VoxelRigidBody : MonoBehaviour {
 		return cols.Count > 0;
 	}
 	public bool GlobalCollision ( float remainingTime, out List<CollisionInfo> collisions )
-	{
-		collisions = new List<CollisionInfo> ();
+    {
+        collisions = new List<CollisionInfo> ();
 		for ( int parti = 0 ; parti < particles.Length ; parti ++ ) {
 			List<CollisionInfo> cols = null;
 			if (ParticleCollision(particles[parti],remainingTime,out cols)) {
@@ -133,7 +133,7 @@ public class VoxelRigidBody : MonoBehaviour {
 			}
 		}
 		collisions = collisions.OrderBy(o=>o.collisionTime).ToList();
-		return collisions.Count > 0;
+        return collisions.Count > 0;
 	}
 	public void UpdateForces ( List<VoxelGridForce> globalForces, float deltaTime ) {
 		for (int i = 0; i < particles.Length; i++) {

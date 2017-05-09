@@ -131,8 +131,11 @@ public class VoxelGridPhysicSimulator : MonoBehaviour {
 				body.Simulate (deltaTime, collisionDampen, globalForces);
 			}
 		}
-	}
-	private void UpdatePhysics()
+    }
+    double totalTime = 0.0;
+    int calls = 0;
+    public double meanTime = 0.0;
+    private void UpdatePhysics()
 	{
 		DateTime initial = DateTime.Now;
 		DateTime lastSimulationTime = initial;
@@ -141,9 +144,16 @@ public class VoxelGridPhysicSimulator : MonoBehaviour {
 			DateTime current = DateTime.Now;
 			float elapsedMillisecs = (float) ((TimeSpan)(current - lastSimulationTime)).TotalMilliseconds;
 			float deltaTime = elapsedMillisecs / 1000.0f;
-			if (deltaTime >= deltaTimeThreshold) {
-				Simulate (deltaTime);
-				lastSimulationTime = current;
+			if (deltaTime >= deltaTimeThreshold)
+            {
+                DateTime initial1 = DateTime.Now;
+                Simulate (deltaTime);
+                DateTime final = DateTime.Now;
+                float elapsedMillisecs1 = (float)((TimeSpan)(final - initial1)).TotalMilliseconds;
+                totalTime += elapsedMillisecs1;
+                calls++;
+                meanTime = totalTime / calls;
+                lastSimulationTime = current;
 			}
 		}
 	}

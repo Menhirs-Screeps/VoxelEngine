@@ -9,7 +9,9 @@ public class VoxelCollider : MonoBehaviour {
 	void Update () {
 	}
 	void OnDrawGizmosSelected () {
+        Color c = Gizmos.color;
 		Gizmos.color = Color.green;
 		Gizmos.DrawWireCube (shape.center, shape.halfSize * 2.0f);
+        Gizmos.color = c;
 	}
 }

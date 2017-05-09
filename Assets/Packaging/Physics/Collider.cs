@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+interface IPhysicCollider
+{
+    Vector3 Center { get; }
+}
+
 [System.Serializable]
 public class CollisionShape
 {
@@ -179,9 +184,19 @@ public static class Collider {
 			return cOne * 0.5f + cTwo * 0.5f;
 		}
 	}
-	public static CollisionInfo Collides ( AABB one, AABB two ) {
-		// Find the vector between the two centres
-		Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+	public static CollisionInfo Collides ( AABB one, AABB two )
+    {
+        Vector3 onemin = one.center - one.halfSize, onemax = one.center + one.halfSize;
+        Vector3 twomin = two.center - two.halfSize, twomax = two.center + two.halfSize;
+
+        if (onemax.x < twomin.x) return null;
+        if (onemin.x > twomax.x) return null;
+        if (onemax.y < twomin.y) return null;
+        if (onemin.y > twomax.y) return null;
+        if (onemax.z < twomin.z) return null;
+        if (onemin.z > twomax.z) return null;
+        // Find the vector between the two centres
+        Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
 
 		// We start assuming there is no contact
 		float pen = Mathf.Infinity;
